@@ -1,10 +1,36 @@
 "use client";
-import React from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import React, { useState } from 'react';
+import axios from 'axios';
 
-export default function Signup() {
-  const router = useRouter();
+
+
+const Signup = () => {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.post('http://127.0.0.1:8000/api/auth/register', {
+        name,
+        email,
+        password,
+        password_confirmation: confirmPassword,
+      });
+
+      console.log(response.data); // Xử lý dữ liệu phản hồi theo nhu cầu
+
+      // Chuyển hướng đến trang chủ hoặc thực hiện các hành động khác
+      // Bạn có thể sử dụng router của Next.js hoặc window.location để chuyển hướng
+    } catch (error) {
+      console.error(error); // Xử lý lỗi theo nhu cầu
+    }
+  };
 
   return (
     <div className="flex justify-center mt-8 ">
@@ -20,7 +46,7 @@ export default function Signup() {
           </div>
 
           <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-            <form className="space-y-6" action="#" method="POST">
+            <form onSubmit={handleSubmit} className="space-y-6" action="#" method="POST">
             <div>
                 <label
                   htmlFor="name"
@@ -29,7 +55,7 @@ export default function Signup() {
                   Name
                 </label>
                 <div className="mt-2">
-                  <input
+                  <input  onChange={(e) => setName(e.target.value)}
                     id="name"
                     name="name"
                     type="text"
@@ -49,7 +75,7 @@ export default function Signup() {
                   Email address
                 </label>
                 <div className="mt-2">
-                  <input
+                  <input onChange={(e) => setEmail(e.target.value)}
                     id="email"
                     name="email"
                     type="email"
@@ -70,7 +96,7 @@ export default function Signup() {
                   </label>
                 </div>
                 <div className="mt-2">
-                  <input
+                  <input onChange={(e) => setPassword(e.target.value)}
                     id="password"
                     name="password"
                     type="password"
@@ -91,7 +117,7 @@ export default function Signup() {
                   </label>
                 </div>
                 <div className="mt-2">
-                  <input
+                  <input onChange={(e) => setConfirmPassword(e.target.value)}
                     id="cpassword"
                     name="cpassword"
                     type="password"
@@ -128,4 +154,6 @@ export default function Signup() {
       </div>
     </div>
   );
-}
+};
+
+export default Signup;
